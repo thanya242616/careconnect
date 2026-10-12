@@ -1,0 +1,549 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareConnect - Online Consultation</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f2f7fb;
+    color: #263746;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #123c55;
+    color: white;
+    position: fixed;
+    padding: 25px 15px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px;
+    margin: 7px 0;
+    border-radius: 7px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #1e617d;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    color: #123c55;
+    font-size: 27px;
+}
+
+.back {
+    color: #087bb5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.description {
+    color: #71818d;
+    margin-bottom: 25px;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px #0000000a;
+}
+
+.filters input,
+.filters select {
+    padding: 12px;
+    border: 1px solid #ccd9e2;
+    border-radius: 7px;
+    background: white;
+    outline: none;
+}
+
+.filters input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filters select {
+    min-width: 180px;
+}
+
+.consultation-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #0000000a;
+}
+
+.consultation-card h2 {
+    color: #123c55;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+th {
+    background: #eaf3f8;
+    color: #244d64;
+    text-align: left;
+    padding: 14px;
+}
+
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e7edf1;
+}
+
+.status {
+    padding: 7px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fff3d8;
+    color: #946500;
+}
+
+.scheduled {
+    background: #e5efff;
+    color: #285baf;
+}
+
+.completed {
+    background: #e2f5e9;
+    color: #237744;
+}
+
+.cancelled {
+    background: #ffe8e8;
+    color: #b33b3b;
+}
+
+.action-btn {
+    padding: 9px 12px;
+    background: #087eae;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #05658e;
+}
+
+.empty {
+    text-align: center;
+    padding: 45px 10px;
+    color: #71818d;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.details {
+    display: none;
+    background: #f7fafc;
+    border: 1px solid #dce8ef;
+    padding: 25px;
+    margin-top: 25px;
+    border-radius: 10px;
+}
+
+.details h3 {
+    color: #123c55;
+    margin-bottom: 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 13px;
+    color: #71818d;
+    margin-bottom: 6px;
+}
+
+.detail-item p {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.details-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+}
+
+.close-btn {
+    padding: 10px 18px;
+    background: #e8edf1;
+    color: #344b5a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.note {
+    margin-top: 20px;
+    color: #71818d;
+    font-size: 13px;
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">CareConnect</div>
+
+    <a href="doctor_profile.html">Dashboard</a>
+    <a href="docprofile.html">My Profile</a>
+    <a href="doctor_appointments.html">Appointments</a>
+    <a href="doctor_patients.html">Patients</a>
+    <a href="doctor_reports.html">Medical Reports</a>
+    <a href="doctor_online_consultation.php" class="active">Online Consultation</a>
+    <a href="doctor_prescription.html">Prescriptions</a>
+    <a href="doctor_followup.html">Follow-ups</a>
+    <a href="index.html">Logout</a>
+
+</div>
+
+<div class="main">
+
+    <div class="header">
+        <h1>Online Consultation</h1>
+
+        <a href="doctor_profile.html" class="back">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <p class="description">
+        Manage patient online consultation requests and sessions.
+    </p>
+
+    <div class="filters">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by Patient ID or Name"
+            oninput="displayConsultations()"
+        >
+
+        <select id="statusFilter" onchange="displayConsultations()">
+            <option value="All">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+
+    </div>
+
+    <div class="consultation-card">
+
+        <h2>Consultation Requests</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="consultationTable"></tbody>
+
+            </table>
+
+        </div>
+
+        <div class="empty" id="emptyMessage">
+            <div class="empty-icon">🩺</div>
+            <h3>No Online Consultations</h3>
+            <p>Patient online consultation bookings will appear here.</p>
+        </div>
+
+        <div class="details" id="consultationDetails">
+
+            <h3>Consultation Details</h3>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <label>Patient ID</label>
+                    <p id="dId"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Patient Name</label>
+                    <p id="dName"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Appointment Date</label>
+                    <p id="dDate"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Appointment Time</label>
+                    <p id="dTime"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Consultation Type</label>
+                    <p>Online Video Consultation</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Current Status</label>
+                    <p id="dStatus"></p>
+                </div>
+
+            </div>
+
+            <div class="details-buttons">
+
+                <button class="action-btn" onclick="startConsultation()">
+                    Start Consultation
+                </button>
+
+                <button class="close-btn" onclick="closeDetails()">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <p class="note">
+        Patient consultation details must be accessed only by authorized
+        doctors. A real video session requires a secure video-call service.
+    </p>
+
+</div>
+
+<script>
+
+// No sample consultation records.
+// Actual patient bookings will be connected through PHP and MySQL.
+const consultations = [];
+
+let selectedConsultation = null;
+
+function displayConsultations() {
+
+    const table = document.getElementById("consultationTable");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    const search = document.getElementById("searchInput")
+        .value.toLowerCase().trim();
+
+    const selectedStatus = document.getElementById("statusFilter").value;
+
+    table.innerHTML = "";
+
+    document.getElementById("consultationDetails").style.display = "none";
+
+    const filtered = consultations.filter(item => {
+
+        const searchMatch =
+            item.patientId.toLowerCase().includes(search) ||
+            item.patientName.toLowerCase().includes(search);
+
+        const statusMatch =
+            selectedStatus === "All" || item.status === selectedStatus;
+
+        return searchMatch && statusMatch;
+    });
+
+    if (filtered.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+    }
+
+    emptyMessage.style.display = "none";
+
+    filtered.forEach(item => {
+
+        const row = document.createElement("tr");
+
+        [
+            item.patientId,
+            item.patientName,
+            item.date,
+            item.time
+        ].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
+
+        const statusCell = document.createElement("td");
+        const badge = document.createElement("span");
+
+        badge.className = "status " + item.status.toLowerCase();
+        badge.textContent = item.status;
+
+        statusCell.appendChild(badge);
+        row.appendChild(statusCell);
+
+        const actionCell = document.createElement("td");
+        const button = document.createElement("button");
+
+        button.textContent = "View Details";
+        button.className = "action-btn";
+
+        button.addEventListener("click", () => {
+            viewDetails(item.id);
+        });
+
+        actionCell.appendChild(button);
+        row.appendChild(actionCell);
+
+        table.appendChild(row);
+    });
+}
+
+function viewDetails(id) {
+
+    selectedConsultation = consultations.find(item => item.id === id);
+
+    if (!selectedConsultation) return;
+
+    document.getElementById("dId").textContent =
+        selectedConsultation.patientId;
+
+    document.getElementById("dName").textContent =
+        selectedConsultation.patientName;
+
+    document.getElementById("dDate").textContent =
+        selectedConsultation.date;
+
+    document.getElementById("dTime").textContent =
+        selectedConsultation.time;
+
+    document.getElementById("dStatus").textContent =
+        selectedConsultation.status;
+
+    document.getElementById("consultationDetails").style.display = "block";
+}
+
+function startConsultation() {
+
+    if (!selectedConsultation) return;
+
+    if (selectedConsultation.status !== "Scheduled") {
+        alert("Only scheduled consultations can be started.");
+        return;
+    }
+
+    alert(
+        "Consultation selected for " +
+        selectedConsultation.patientName +
+        ". A secure video-call connection is required to begin the actual consultation."
+    );
+}
+
+function closeDetails() {
+    document.getElementById("consultationDetails").style.display = "none";
+}
+
+displayConsultations();
+
+</script>
+
+</body>
+</html>

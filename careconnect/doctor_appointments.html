@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareConnect - Appointment Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f2f7fb;
+    color: #263746;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #123c55;
+    color: white;
+    position: fixed;
+    padding: 25px 15px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px;
+    margin: 7px 0;
+    border-radius: 7px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #1e617d;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    color: #123c55;
+    font-size: 27px;
+}
+
+.back {
+    text-decoration: none;
+    color: #087bb5;
+    font-weight: bold;
+}
+
+.description {
+    color: #687987;
+    margin-bottom: 25px;
+}
+
+.filters {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px #0000000a;
+}
+
+select,
+input {
+    padding: 11px;
+    border: 1px solid #ccd9e2;
+    border-radius: 7px;
+    background: white;
+    outline: none;
+}
+
+select:focus,
+input:focus {
+    border-color: #1684b5;
+}
+
+.table-box {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #0000000a;
+    overflow-x: auto;
+}
+
+.table-box h2 {
+    color: #123c55;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+th {
+    background: #eaf3f8;
+    color: #244d64;
+    text-align: left;
+    padding: 14px;
+}
+
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e7edf1;
+}
+
+.empty {
+    text-align: center;
+    padding: 45px 10px;
+    color: #71818d;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.status {
+    padding: 7px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.confirmed {
+    background: #e2f5e9;
+    color: #237744;
+}
+
+.completed {
+    background: #e5efff;
+    color: #285baf;
+}
+
+.cancelled {
+    background: #ffe8e8;
+    color: #b33b3b;
+}
+
+.action {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #087eae;
+    color: white;
+    cursor: pointer;
+}
+
+.action:hover {
+    background: #05658e;
+}
+
+.note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #71818d;
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .header {
+        align-items: flex-start;
+        gap: 12px;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="logo">CareConnect</div>
+
+    <a href="doctor_profile.html">Dashboard</a>
+    <a href="doctor_profile.html">My Profile</a>
+    <a href="doctor_appointments.html" class="active">Appointments</a>
+    <a href="doctor_patients.html">Patients</a>
+    <a href="doctor_reports.html">Medical Reports</a>
+    <a href="doctor_consultation.html">Online Consultation</a>
+    <a href="doctor_prescription.html">Prescriptions</a>
+    <a href="doctor_followup.html">Follow-ups</a>
+    <a href="index.html">Logout</a>
+</div>
+
+<div class="main">
+
+    <div class="header">
+        <h1>Appointment Management</h1>
+        <a href="doctor_profile.html" class="back">← Back to Dashboard</a>
+    </div>
+
+    <p class="description">
+        View and manage patient hospital and online appointments.
+    </p>
+
+    <div class="filters">
+
+        <input type="date" id="dateFilter">
+
+        <select id="typeFilter">
+            <option value="All">All Appointment Types</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Online">Online</option>
+        </select>
+
+        <select id="statusFilter">
+            <option value="All">All Status</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+
+    </div>
+
+    <div class="table-box">
+
+        <h2>Patient Appointments</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Patient Name</th>
+                    <th>Appointment Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="appointmentTable"></tbody>
+        </table>
+
+        <div class="empty" id="emptyMessage">
+            <div class="empty-icon">📅</div>
+            <h3>No Appointments Found</h3>
+            <p>Patient appointments will appear here after booking.</p>
+        </div>
+
+    </div>
+
+    <p class="note">
+        Patient appointment information should be visible only to authorized doctors.
+    </p>
+
+</div>
+
+<script>
+const appointments = [];
+
+function displayAppointments() {
+
+    const table = document.getElementById("appointmentTable");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    const selectedDate = document.getElementById("dateFilter").value;
+    const selectedType = document.getElementById("typeFilter").value;
+    const selectedStatus = document.getElementById("statusFilter").value;
+
+    table.innerHTML = "";
+
+    const filtered = appointments.filter(appointment => {
+
+        const dateMatch =
+            selectedDate === "" || appointment.date === selectedDate;
+
+        const typeMatch =
+            selectedType === "All" || appointment.type === selectedType;
+
+        const statusMatch =
+            selectedStatus === "All" || appointment.status === selectedStatus;
+
+        return dateMatch && typeMatch && statusMatch;
+    });
+
+    if (filtered.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+    }
+
+    emptyMessage.style.display = "none";
+
+    filtered.forEach(appointment => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${appointment.patientId}</td>
+            <td>${appointment.patientName}</td>
+            <td>${appointment.type}</td>
+            <td>${appointment.date}</td>
+            <td>${appointment.time}</td>
+            <td>
+                <span class="status ${appointment.status.toLowerCase()}">
+                    ${appointment.status}
+                </span>
+            </td>
+            <td>
+                <button class="action"
+                    onclick="updateStatus('${appointment.id}')">
+                    Update Status
+                </button>
+            </td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+function updateStatus(id) {
+
+    const appointment = appointments.find(item => item.id === id);
+
+    if (!appointment) return;
+
+    const newStatus = prompt(
+        "Enter status: Confirmed, Completed, or Cancelled",
+        appointment.status
+    );
+
+    if (["Confirmed", "Completed", "Cancelled"].includes(newStatus)) {
+        appointment.status = newStatus;
+        displayAppointments();
+    } else if (newStatus !== null) {
+        alert("Please enter a valid status.");
+    }
+}
+
+document.getElementById("dateFilter")
+    .addEventListener("change", displayAppointments);
+
+document.getElementById("typeFilter")
+    .addEventListener("change", displayAppointments);
+
+document.getElementById("statusFilter")
+    .addEventListener("change", displayAppointments);
+
+displayAppointments();
+</script>
+
+</body>
+</html>

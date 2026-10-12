@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CareConnect - Online Consultation</title>
+<meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f7fb;
+            margin: 0;
+        }
+
+        header {
+            background-color: #176b87;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 750px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #176b87;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #176b87;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background-color: #10536b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            background-color: #f8fafc;
+            border: 1px dashed #b8cbd5;
+            border-radius: 8px;
+        }
+
+        .back {
+            display: inline-block;
+            margin: 15px 0;
+            color: #176b87;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            color: #777;
+            font-size: 13px;
+        }
+        .emoji {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>CareConnect</h1>
+    <p>Your Health. Your Records. Your Control.</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Online Consultation</h2>
+
+        <form id="consultationForm">
+
+            <label for="patientName">Patient Name</label>
+            <input type="text" id="patientName"
+                   placeholder="Enter patient name" required>
+
+            <label for="patientId">Patient ID</label>
+            <input type="text" id="patientId"
+                   placeholder="Enter patient ID" required>
+
+            <label for="hospital">Enter  Hospital Name</label>
+           <input type="text" id="hospital_name"
+                   placeholder="Enter hospital name" required>
+            <label for="specialization">Doctor Specialization</label>
+            <select id="specialization" required>
+                <option value="">Select Specialization</option>
+                <option>General Physician</option>
+                <option>Cardiologist</option>
+                <option>Dermatologist</option>
+                <option>Neurologist</option>
+                <option>Pediatrician</option>
+                <option>Orthopedic</option>
+                <option>Gynecologist</option>
+                <option>Other</option>
+            </select>
+
+            <label for="doctor">Enter Doctor Name</label>
+            <input type="text" id="doctor"
+                   placeholder="Enter doctor's name">
+
+            <label for="date">Consultation Date</label>
+            <input type="date" id="date" required>
+
+            <label for="time">Preferred Time</label>
+            <select id="time" required>
+                <option value="">Select Time</option>
+                <option>09:00 AM</option>
+                <option>10:00 AM</option>
+                <option>11:00 AM</option>
+                <option>02:00 PM</option>
+                <option>03:00 PM</option>
+                <option>04:00 PM</option>
+            </select>
+
+            <label for="type">Consultation Type</label>
+            <select id="type" required>
+                <option value="">Select Type</option>
+                <option>Video Consultation</option>
+                <option>Audio Consultation</option>
+            </select>
+
+            <label for="problem">Describe Your Health Issue</label>
+            <textarea id="problem" rows="4"
+                      placeholder="Describe your symptoms or health problem"
+                      required></textarea>
+
+            <button type="submit">Request Consultation</button>
+
+        </form>
+
+        <p class="note">
+            Consultation requests will be connected to the doctor through the backend later.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Previous Consultations</h2>
+
+        <div class="empty">
+            <p><strong>No previous consultations found.</strong></p>
+            <p>Your consultation history will appear here.</p>
+        </div>
+    </div>
+
+    <a class="back" href="patient.html">
+        ← Back to Patient Dashboard
+    </a>
+
+</div>
+
+<script>
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("date").min = today;
+
+    document.getElementById("consultationForm")
+    .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        alert("Consultation request submitted successfully! Doctor connection will be enabled later.");
+
+        this.reset();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareConnect - Doctor Profile</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f2f7fb;
+    color: #263746;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #123c55;
+    color: white;
+    position: fixed;
+    padding: 25px 15px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px;
+    margin: 7px 0;
+    border-radius: 7px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #1e617d;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    color: #123c55;
+    font-size: 27px;
+}
+
+.back {
+    color: #087bb5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.profile-card {
+    background: white;
+    max-width: 850px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px #0000000a;
+}
+
+.profile-top {
+    text-align: center;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e7edf1;
+    margin-bottom: 25px;
+}
+
+.photo {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #dcecf4;
+    background: #eaf3f8;
+}
+
+.upload-label {
+    display: inline-block;
+    margin-top: 12px;
+    background: #e8f4fa;
+    color: #087eae;
+    padding: 9px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-label:hover {
+    background: #d7edf7;
+}
+
+#photoInput {
+    display: none;
+}
+
+.profile-top h2 {
+    margin-top: 15px;
+    color: #123c55;
+}
+
+.profile-top p {
+    color: #71818d;
+    margin-top: 5px;
+}
+
+.section-title {
+    color: #123c55;
+    margin-bottom: 20px;
+    font-size: 19px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #526777;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd9e2;
+    border-radius: 7px;
+    background: #f8fafc;
+    color: #263746;
+    outline: none;
+}
+
+.field input:disabled {
+    background: #f1f4f6;
+    color: #647583;
+}
+
+.field input:focus {
+    border-color: #1684b5;
+    background: white;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.edit-btn,
+.save-btn {
+    background: #087eae;
+    color: white;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+    background: #05658e;
+}
+
+.cancel-btn {
+    background: #e8edf1;
+    color: #344b5a;
+}
+
+.cancel-btn:hover {
+    background: #dce4e9;
+}
+
+#saveBtn,
+#cancelBtn {
+    display: none;
+}
+
+.message {
+    text-align: right;
+    margin-top: 15px;
+    color: #237744;
+    font-size: 14px;
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .profile-card {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">CareConnect</div>
+
+    <a href="doctor_profile.html">Dashboard</a>
+    <a href="docprofile.html" class="active">My Profile</a>
+    <a href="doctor_appointments.html">Appointments</a>
+    <a href="doctor_patients.html">Patients</a>
+    <a href="doctor_reports.html">Medical Reports</a>
+    <a href="doctor_consultation.html">Online Consultation</a>
+    <a href="doctor_prescription.html">Prescriptions</a>
+    <a href="doctor_followup.html">Follow-ups</a>
+    <a href="index.html">Logout</a>
+
+</div>
+
+<div class="main">
+
+    <div class="header">
+        <h1>Doctor Profile</h1>
+        <a href="doctor_profile.html" class="back">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-top">
+
+            <img
+                src="https://via.placeholder.com/125"
+                id="profilePhoto"
+                class="photo"
+                alt="Doctor Profile Photo"
+            >
+
+            <br>
+
+            <label for="photoInput" class="upload-label">
+                📷 Upload Photo
+            </label>
+
+            <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                disabled
+            >
+
+            <h2 id="displayName">Doctor Name</h2>
+            <p>Medical Professional</p>
+
+        </div>
+
+        <h3 class="section-title">Personal Information</h3>
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label>Doctor Name</label>
+                <input type="text" id="doctorName" disabled>
+            </div>
+
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" id="email" disabled>
+            </div>
+
+            <div class="field">
+                <label>Mobile Number</label>
+                <input type="tel" id="mobile" disabled>
+            </div>
+
+            <div class="field">
+                <label>Specialization</label>
+                <input type="text" id="specialization" disabled>
+            </div>
+
+            <div class="field">
+                <label>Hospital Name</label>
+                <input type="text" id="hospital" disabled>
+            </div>
+
+            <div class="field">
+                <label>Medical Registration Number</label>
+                <input type="text" id="registration" disabled>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button class="edit-btn" id="editBtn" onclick="enableEdit()">
+                Edit Profile
+            </button>
+
+            <button class="cancel-btn" id="cancelBtn" onclick="cancelEdit()">
+                Cancel
+            </button>
+
+            <button class="save-btn" id="saveBtn" onclick="saveProfile()">
+                Save Changes
+            </button>
+
+        </div>
+
+        <p class="message" id="message"></p>
+
+    </div>
+
+</div>
+
+<script>
+const fields = [
+    "doctorName",
+    "email",
+    "mobile",
+    "specialization",
+    "hospital",
+    "registration"
+];
+
+const defaultProfile = {
+    doctorName: "",
+    email: "",
+    mobile: "",
+    specialization: "",
+    hospital: "",
+    registration: "",
+    photo: ""
+};
+
+let profile = JSON.parse(
+    localStorage.getItem("careconnectDoctorProfile")
+) || defaultProfile;
+
+let originalProfile = {};
+
+function loadProfile() {
+
+    fields.forEach(id => {
+        document.getElementById(id).value = profile[id] || "";
+    });
+
+    document.getElementById("displayName").textContent =
+        profile.doctorName || "Doctor Name";
+
+    if (profile.photo) {
+        document.getElementById("profilePhoto").src = profile.photo;
+    }
+
+}
+
+function enableEdit() {
+
+    originalProfile = { ...profile };
+
+    fields.forEach(id => {
+        document.getElementById(id).disabled = false;
+    });
+
+    document.getElementById("photoInput").disabled = false;
+
+    document.getElementById("editBtn").style.display = "none";
+    document.getElementById("saveBtn").style.display = "inline-block";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+
+    document.getElementById("message").textContent = "";
+}
+
+function saveProfile() {
+
+    const email = document.getElementById("email").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+
+    if (!document.getElementById("doctorName").value.trim() ||
+        !email || !mobile) {
+        alert("Please fill Doctor Name, Email and Mobile Number.");
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+    }
+
+    fields.forEach(id => {
+        profile[id] = document.getElementById(id).value.trim();
+    });
+
+    localStorage.setItem(
+        "careconnectDoctorProfile",
+        JSON.stringify(profile)
+    );
+
+    finishEditing();
+
+    document.getElementById("message").textContent =
+        "Profile changes saved successfully!";
+
+    loadProfile();
+}
+
+function cancelEdit() {
+
+    profile = { ...originalProfile };
+
+    loadProfile();
+    finishEditing();
+
+    document.getElementById("message").textContent =
+        "Changes cancelled.";
+}
+
+function finishEditing() {
+
+    fields.forEach(id => {
+        document.getElementById(id).disabled = true;
+    });
+
+    document.getElementById("photoInput").disabled = true;
+
+    document.getElementById("editBtn").style.display = "inline-block";
+    document.getElementById("saveBtn").style.display = "none";
+    document.getElementById("cancelBtn").style.display = "none";
+
+    document.getElementById("photoInput").value = "";
+}
+
+document.getElementById("photoInput").addEventListener("change", function() {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        alert("Please select an image smaller than 2 MB.");
+        this.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        profile.photo = event.target.result;
+        document.getElementById("profilePhoto").src = profile.photo;
+    };
+
+    reader.readAsDataURL(file);
+});
+
+loadProfile();
+</script>
+
+</body>
+</html>

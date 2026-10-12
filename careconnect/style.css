@@ -1,0 +1,74 @@
+body{
+            background-image: url("https://thumbs.dreamstime.com/b/healthcare-technology-doctor-using-digital-tablet-icon-medical-network-hospital-background-162019727.jpg");
+            background-size: cover;
+            background-position: full ;
+            background-repeat: no-repeat;
+    }
+    .buttons {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Login Button */
+.login-btn {
+    background: white;
+    color: #1664d9;
+    border: 2px solid #1664d9;
+}
+
+.login-btn:hover {
+    background: #1664d9;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(22, 100, 217, 0.3);
+}
+.doctor-login-btn {
+    background: white;
+    color: #1664d9;
+    border: 2px solid #1664d9;
+}
+
+.doctor-login-btn:hover {
+    background: #1664d9;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(22, 100, 217, 0.3);
+}
+
+
+.logo-title {
+    font-size: 100px;
+    margin-top:200px;
+    text-align: center;
+    font-weight: bold;
+    color: #1664d9;
+    letter-spacing: 2px;
+}
+
+.heart {
+    color: #208bb9;
+    margin-right: 10px;
+}
+
+.connect {
+    color: #16a6a6;
+}
+
+.tagline {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 30px;
+    color: #0c0a0a;
+    letter-spacing: 0.5px;
+}

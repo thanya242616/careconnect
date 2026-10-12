@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareConnect - Follow-up Management</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f7fb;
+    color: #263746;
+}
+
+header {
+    background: #087f8c;
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin: 0;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 25px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    margin-bottom: 25px;
+}
+
+h2, h3 {
+    color: #087f8c;
+}
+
+.search-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+input, select, textarea {
+    padding: 11px;
+    border: 1px solid #cbd7df;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.search-row input {
+    flex: 1;
+    min-width: 200px;
+}
+
+button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-btn, .save-btn {
+    background: #087f8c;
+    color: white;
+}
+
+.clear-btn {
+    background: #e8eef2;
+    color: #263746;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 13px;
+    border-bottom: 1px solid #e4ebef;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background: #eaf5f6;
+    color: #087f8c;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #edf1f4;
+}
+
+.status.pending {
+    background: #fff3d6;
+    color: #8a5a00;
+}
+
+.status.completed {
+    background: #e0f5e9;
+    color: #167444;
+}
+
+.status.cancelled {
+    background: #ffe5e5;
+    color: #b42318;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #71808c;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.details {
+    background: #f7fafc;
+    padding: 18px;
+    border-radius: 8px;
+    margin-top: 15px;
+    display: none;
+}
+
+@media(max-width:650px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>CareConnect</h2>
+    <a href="doctor_profile.html">← Doctor Dashboard</a>
+</header>
+
+<div class="container">
+
+<div class="card">
+    <h2>Follow-up Management</h2>
+    <p>Manage patient follow-up appointments and monitor their status.</p>
+</div>
+
+<div class="card">
+
+    <h3>Search Follow-up</h3>
+
+    <div class="search-row">
+        <input type="text" id="searchInput"
+        placeholder="Search by Patient ID or Name">
+
+        <select id="statusFilter">
+            <option value="">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+
+        <button class="search-btn" onclick="displayFollowups()">Search</button>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h3>Follow-up Records</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Follow-up Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="followupTable"></tbody>
+    </table>
+
+    <div id="emptyMessage" class="empty">
+        No follow-up records available.
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h3>Add New Follow-up</h3>
+
+    <form id="followupForm">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Patient ID</label>
+                <input type="text" id="patientId" required>
+            </div>
+
+            <div>
+                <label>Patient Name</label>
+                <input type="text" id="patientName" required>
+            </div>
+
+            <div>
+                <label>Follow-up Date</label>
+                <input type="date" id="followupDate" required>
+            </div>
+
+            <div>
+                <label>Follow-up Time</label>
+                <input type="time" id="followupTime" required>
+            </div>
+
+            <div>
+                <label>Follow-up Type</label>
+                <select id="followupType" required>
+                    <option value="">Select Type</option>
+                    <option>In-person Visit</option>
+                    <option>Online Consultation</option>
+                    <option>Report Review</option>
+                    <option>Routine Check-up</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <select id="followupStatus" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="full">
+                <label>Reason for Follow-up</label>
+                <textarea id="reason" required
+                placeholder="Enter follow-up reason"></textarea>
+            </div>
+
+            <div class="full">
+                <label>Doctor's Notes</label>
+                <textarea id="doctorNotes"
+                placeholder="Enter additional notes"></textarea>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="save-btn">
+                Add Follow-up
+            </button>
+
+            <button type="reset" class="clear-btn">
+                Clear
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card details" id="detailsPanel">
+    <h3>Follow-up Details</h3>
+    <div id="detailsContent"></div>
+    <button class="clear-btn" onclick="closeDetails()">Close</button>
+</div>
+
+</div>
+
+<script>
+
+// Empty array: no sample follow-up records
+let followups = [];
+
+function displayFollowups() {
+
+    const tbody = document.getElementById("followupTable");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    const search = document.getElementById("searchInput")
+        .value.trim().toLowerCase();
+
+    const filter = document.getElementById("statusFilter").value;
+
+    tbody.innerHTML = "";
+
+    const filtered = followups.filter(item => {
+
+        const matchesSearch =
+            item.patientId.toLowerCase().includes(search) ||
+            item.patientName.toLowerCase().includes(search);
+
+        const matchesStatus =
+            filter === "" || item.status === filter;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    if (filtered.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+    }
+
+    emptyMessage.style.display = "none";
+
+    filtered.forEach(item => {
+
+        const row = document.createElement("tr");
+
+        const values = [
+            item.patientId,
+            item.patientName,
+            item.date + " " + item.time,
+            item.reason,
+            item.status
+        ];
+
+        values.forEach((value, index) => {
+
+            const cell = document.createElement("td");
+
+            if (index === 4) {
+                const badge = document.createElement("span");
+                badge.className = "status " + item.status.toLowerCase();
+                badge.textContent = item.status;
+                cell.appendChild(badge);
+            } else {
+                cell.textContent = value;
+            }
+
+            row.appendChild(cell);
+        });
+
+        const actionCell = document.createElement("td");
+
+        const viewButton = document.createElement("button");
+        viewButton.className = "search-btn";
+        viewButton.textContent = "View";
+
+        viewButton.addEventListener("click", () => {
+            viewDetails(item.id);
+        });
+
+        actionCell.appendChild(viewButton);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    });
+}
+
+document.getElementById("followupForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const record = {
+        id: Date.now(),
+
+        patientId: document.getElementById("patientId").value.trim(),
+        patientName: document.getElementById("patientName").value.trim(),
+        date: document.getElementById("followupDate").value,
+        time: document.getElementById("followupTime").value,
+        type: document.getElementById("followupType").value,
+        status: document.getElementById("followupStatus").value,
+        reason: document.getElementById("reason").value.trim(),
+        notes: document.getElementById("doctorNotes").value.trim()
+    };
+
+    followups.push(record);
+
+    displayFollowups();
+
+    this.reset();
+
+    alert("Follow-up added to the current page.");
+
+});
+
+function viewDetails(id) {
+
+    const item = followups.find(record => record.id === id);
+
+    if (!item) return;
+
+    const panel = document.getElementById("detailsPanel");
+    const content = document.getElementById("detailsContent");
+
+    content.innerHTML = "";
+
+    const details = [
+        ["Patient ID", item.patientId],
+        ["Patient Name", item.patientName],
+        ["Date", item.date],
+        ["Time", item.time],
+        ["Type", item.type],
+        ["Reason", item.reason],
+        ["Status", item.status],
+        ["Doctor's Notes", item.notes || "No additional notes"]
+    ];
+
+    details.forEach(([label, value]) => {
+
+        const p = document.createElement("p");
+        const strong = document.createElement("b");
+
+        strong.textContent = label + ": ";
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(value));
+
+        content.appendChild(p);
+    });
+
+    const statusLabel = document.createElement("label");
+    statusLabel.textContent = "Update Status";
+
+    const statusSelect = document.createElement("select");
+
+    ["Pending", "Completed", "Cancelled"].forEach(status => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        option.selected = status === item.status;
+        statusSelect.appendChild(option);
+    });
+
+    const updateButton = document.createElement("button");
+    updateButton.className = "save-btn";
+    updateButton.textContent = "Update Status";
+
+    updateButton.addEventListener("click", () => {
+        item.status = statusSelect.value;
+        displayFollowups();
+        viewDetails(item.id);
+    });
+
+    content.appendChild(statusLabel);
+    content.appendChild(statusSelect);
+    content.appendChild(updateButton);
+
+    panel.style.display = "block";
+    panel.scrollIntoView({ behavior: "smooth" });
+}
+
+function closeDetails() {
+    document.getElementById("detailsPanel").style.display = "none";
+}
+
+displayFollowups();
+
+</script>
+
+</body>
+</html>

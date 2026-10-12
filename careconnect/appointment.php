@@ -1,0 +1,370 @@
+
+<?php
+session_start();
+
+if (!isset($_SESSION['patient_id'])) {
+    header("Location: login.html");
+    exit();
+}
+
+include "db.php";
+
+$patient_id = (int) $_SESSION['patient_id'];
+$patient_name = $_SESSION['patient_name'] ?? 'Patient';
+
+$message = "";
+$message_type = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $hospital_name = trim($_POST['hospital_name'] ?? '');
+    $specialization = trim($_POST['specialization'] ?? '');
+    $doctor_name = trim($_POST['doctor_name'] ?? '');
+    $appointment_date = $_POST['appointment_date'] ?? '';
+    $appointment_time = trim($_POST['appointment_time'] ?? '');
+    $reason = trim($_POST['reason'] ?? '');
+
+    if (
+        $hospital_name === '' ||
+        $specialization === '' ||
+        $doctor_name === '' ||
+        $appointment_date === '' ||
+        $appointment_time === '' ||
+        $reason === ''
+    ) {
+        $message = "Please fill all the fields.";
+        $message_type = "error";
+    } elseif ($appointment_date < date('Y-m-d')) {
+        $message = "Please select a valid future date.";
+        $message_type = "error";
+    } else {
+
+        $sql = "INSERT INTO appointments
+        (patient_id, patient_name, hospital_name, specialization,
+         doctor_name, appointment_date, appointment_time, reason)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param(
+                "isssssss",
+                $patient_id,
+                $patient_name,
+                $hospital_name,
+                $specialization,
+                $doctor_name,
+                $appointment_date,
+                $appointment_time,
+                $reason
+            );
+
+            if ($stmt->execute()) {
+                $message = "Appointment request submitted successfully!";
+                $message_type = "success";
+            } else {
+                $message = "Unable to book appointment. Please try again.";
+                $message_type = "error";
+            }
+
+            $stmt->close();
+        } else {
+            $message = "Database query error.";
+            $message_type = "error";
+        }
+    }
+}
+
+$display_name = htmlspecialchars($patient_name, ENT_QUOTES, 'UTF-8');
+$display_id = htmlspecialchars((string)$patient_id, ENT_QUOTES, 'UTF-8');
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareConnect - Book Appointment</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f2f7f9;
+    color: #263746;
+}
+
+header {
+    background: #087f8c;
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    font-size: 24px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    background: #05636e;
+    padding: 10px 16px;
+    border-radius: 6px;
+}
+
+.container {
+    max-width: 750px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.form-box {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px #00000010;
+}
+
+.form-box h1 {
+    color: #087f8c;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #687985;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccdadd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #087f8c;
+}
+
+input[readonly] {
+    background: #f0f5f6;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+button {
+    width: 100%;
+    background: #087f8c;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #05636e;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    color: #087f8c;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+.success {
+    background: #e4f7eb;
+    color: #176b38;
+}
+
+.error {
+    background: #fdeaea;
+    color: #a52222;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #7b8992;
+}
+
+@media(max-width: 600px) {
+    .row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    header {
+        padding: 18px;
+    }
+
+    .form-box {
+        padding: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>♥ CareConnect</h2>
+    <a href="index.html">Logout</a>
+</header>
+
+<div class="container">
+<div class="form-box">
+
+    <h1>Book an Appointment</h1>
+
+    <p class="subtitle">
+        Schedule an appointment with a doctor for your healthcare needs.
+    </p>
+
+    <?php if ($message !== ''): ?>
+        <div class="message <?php echo $message_type; ?>">
+            <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="POST" action="appointment.php">
+
+        <div class="form-group">
+            <label>Patient Name</label>
+            <input type="text" value="<?php echo $display_name; ?>" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Patient ID</label>
+            <input type="text" value="<?php echo $display_id; ?>" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Enter Hospital Name</label>
+            <input type="text" name="hospital_name"
+                   placeholder="Enter hospital name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Select Specialization</label>
+            <select name="specialization" required>
+                <option value="">Choose Specialization</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Doctor Name</label>
+            <input type="text" name="doctor_name"
+                   placeholder="Enter doctor's name" required>
+        </div>
+
+        <div class="row">
+
+            <div class="form-group">
+                <label>Appointment Date</label>
+                <input type="date" name="appointment_date"
+                       id="appointmentDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Appointment Time</label>
+                <select name="appointment_time" required>
+                    <option value="">Choose Time</option>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="02:00 PM">02:00 PM</option>
+                    <option value="03:00 PM">03:00 PM</option>
+                    <option value="04:00 PM">04:00 PM</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label>Reason for Visit</label>
+            <textarea name="reason"
+                placeholder="Briefly describe your health concern"
+                required></textarea>
+        </div>
+
+        <button type="submit">Book Appointment</button>
+
+    </form>
+
+    <a href="patient.php" class="back">
+        ← Back to Patient Dashboard
+    </a>
+
+</div>
+</div>
+
+<footer>
+    © 2026 CareConnect | Your Health. Your Records. Your Control.
+</footer>
+
+<script>
+const dateInput = document.getElementById("appointmentDate");
+
+const today = new Date();
+const localDate = new Date(
+    today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().split("T")[0];
+
+dateInput.min = localDate;
+</script>
+
+</body>
+</html>
